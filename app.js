@@ -4,7 +4,8 @@ var app = express();
 const port = 3001;
 const cors = require('cors');
 let auth = require("./services/auth");
-let clientsDao = require("./dao/clientsDao")
+let clientsDao = require("./dao/clientsDao");
+let productsDao = require("./dao/productsDao");
 
 app.use(bodyParser.urlencoded({ extended: true })); app.use(bodyParser.json()); app.use(bodyParser.raw());
 
@@ -25,10 +26,28 @@ app.get('/clients/list', cors(), (req, res) => {
     }));
 });
 
+app.get('/products/list', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => productsDao.getAllProducts())
+    .then(products => res.send(products))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
 app.get('/clients/:id', cors(), (req, res) => {
   auth.checkToken(req.query.token)
     .then(result => clientsDao.getClientById(req.params.id))
     .then(client => res.send(client))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
+app.get('/products/:id', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => productsDao.getProductById(req.params.id))
+    .then(product => res.send(product))
     .catch(() => res.status(401).json({
       error: 'Unauthorized'
     }));
