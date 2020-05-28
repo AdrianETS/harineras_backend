@@ -49,4 +49,4 @@ function login(user, password) {
     })
 }
 
-module.exports = { login, insertUser }
+module.exports = { login, insertUser, checkIfUserExistsInDb }
