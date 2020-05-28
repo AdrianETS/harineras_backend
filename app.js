@@ -6,6 +6,7 @@ const cors = require('cors');
 let auth = require("./services/auth");
 let clientsDao = require("./dao/clientsDao");
 let productsDao = require("./dao/productsDao");
+let usersDao = require("./dao/usersDao");
 
 app.use(bodyParser.urlencoded({ extended: true })); app.use(bodyParser.json()); app.use(bodyParser.raw());
 
@@ -52,6 +53,15 @@ app.get('/products/:id', cors(), (req, res) => {
       error: 'Unauthorized'
     }));
 });
+
+app.post("/users", cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+  .then(result => usersDao.insertUser(req.body))
+  .then(result => res.send(result))
+  .catch(() => res.status(401).json({
+    error: 'Unauthorized'
+  }));
+})
 
 app.post("/login", cors(), (req, res) => {
   auth.login(req, res);
