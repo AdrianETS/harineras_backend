@@ -13,7 +13,7 @@ function getAllClients() {
 
 function getClientById(id) {
     return new Promise((resolve, reject) => {
-        con.query("SELECT * FROM clientes WHERE id_cliente = " +  mysql.escape(id), function (err, result, fields) {
+        con.query("SELECT * FROM clientes WHERE id = " +  mysql.escape(id), function (err, result, fields) {
             if (err) throw err;
             resolve(result[0]);
           });
