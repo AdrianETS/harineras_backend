@@ -20,4 +20,13 @@ function getClientById(id) {
     })
 }
 
-module.exports = { getAllClients, getClientById }
+function getPriceByClientId(id) {
+    return new Promise((resolve, reject) => {
+        con.query("SELECT producto, precioEspecial FROM precio_cliente WHERE cliente = " +  mysql.escape(id), function (err, result, fields) {
+            if (err) throw err;
+            resolve(result[0]);
+          });
+    })
+}
+
+module.exports = { getAllClients, getClientById, getPriceByClientId}

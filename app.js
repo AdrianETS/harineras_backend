@@ -46,6 +46,15 @@ app.get('/clients/:id', cors(), (req, res) => {
     }));
 });
 
+app.get('/clients/prices/:id', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => clientsDao.getPriceByClientId(req.params.id))
+    .then(client => res.send(client))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
 app.get('/products/:id', cors(), (req, res) => {
   auth.checkToken(req.query.token)
     .then(result => productsDao.getProductById(req.params.id))
