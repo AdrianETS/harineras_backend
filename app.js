@@ -48,8 +48,9 @@ app.get('/clients/:id', cors(), (req, res) => {
 
 app.get('/clients/prices/:id', cors(), (req, res) => {
   auth.checkToken(req.query.token)
-    .then(result => clientsDao.getPriceByClientId(req.params.id))
-    .then(client => res.send(client))
+    .then(result => productsDao.getAllProducts())
+    .then(result => clientsDao.getPriceByClientId(req.params.id, result))
+    .then(products => res.send(products))
     .catch(() => res.status(401).json({
       error: 'Unauthorized'
     }));
