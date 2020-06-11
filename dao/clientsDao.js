@@ -20,4 +20,22 @@ function getClientById(id) {
     })
 }
 
-module.exports = { getAllClients, getClientById }
+function getPriceByClientId(id, result) {
+    let products = result;
+    return new Promise((resolve, reject) => {
+        con.query("SELECT id, cliente, nombre_comercial, unidad_medida, img, precio, precioEspecial FROM productos p LEFT JOIN precio_cliente pc ON p.id = pc.producto  WHERE pc.cliente="+  mysql.escape(id), function (err, result, fields) {
+            if (err) throw err;
+            let modified = calculatePricesOfclientId(products, result);
+            resolve(modified);
+        });
+    })
+}
+
+function calculatePricesOfclientId (products, result) {
+    result.forEach(element => {
+        products[element.id-1].precio = element.precioEspecial;
+    });
+    return products;
+}
+
+module.exports = { getAllClients, getClientById, getPriceByClientId}
