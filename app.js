@@ -88,7 +88,7 @@ app.post("/sales", cors(), (req, res) => {
     .then(result => salesDao.insertSaleInSales(req.body))
     .then(result => {
       res.send(result)
-      salesDao.insertSaleInSalesDetails(req.body.data, result.insertId)
+      salesDao.insertSaleInSalesDetails(req.body.cartData, result.insertId)
     })
     .catch(() => res.status(401).json({
       error: 'Unauthorized'
