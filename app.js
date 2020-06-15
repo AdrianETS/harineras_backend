@@ -76,11 +76,23 @@ app.get('/sales/:id', cors(), (req, res) => {
 
 app.post("/users", cors(), (req, res) => {
   auth.checkToken(req.query.token)
-  .then(result => usersDao.insertUser(req.body))
-  .then(result => res.send(result))
-  .catch(() => res.status(401).json({
-    error: 'Unauthorized'
-  }));
+    .then(result => usersDao.insertUser(req.body))
+    .then(result => res.send(result))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+})
+
+app.post("/sales", cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => salesDao.insertSaleInSales(req.body))
+    .then(result => {
+      res.send(result)
+      salesDao.insertSaleInSalesDetails(req.body.cartData, result.insertId)
+    })
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
 })
 
 app.post("/login", cors(), (req, res) => {
