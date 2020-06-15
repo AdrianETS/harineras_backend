@@ -20,7 +20,16 @@ function getProductById(id) {
           });
     })
 }
+function getProductsBySalesId(id) {
+    return new Promise((resolve, reject) => {
+        con.query("SELECT * FROM detalle_venta WHERE id_venta=" +  mysql.escape(id), function (err, result, fields) {
+            if (err) throw err;
+            resolve(result);
+          });
+    })
+}
 
 
 
 module.exports = {getAllProducts, getProductById}
+module.exports = {getProductsBySalesId}

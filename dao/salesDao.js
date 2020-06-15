@@ -18,6 +18,17 @@ function getSaleByClientId(id) {
     })
 }
 
+function listSales() {
+    return new Promise((resolve, reject) => {
+        con.query("SELECT * FROM detalle_venta" , function (err, result, fields) {
+            if (err) throw err;
+            resolve(result);
+          });
+    })
+}
+
+
+
 function calculateTotalPrice(array){
     let totalSumPerSale = 0
     for(let i = 0; i < array.length; i++ ){
@@ -36,4 +47,4 @@ function calculateTotalPrice(array){
 
 
 
-module.exports = {getSaleByClientId}
+module.exports = {getSaleByClientId, listSales}
