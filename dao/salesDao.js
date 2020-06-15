@@ -6,24 +6,24 @@ const con = mysql.createConnection(constants.connection);
 
 function getSaleByClientId(id) {
     return new Promise((resolve, reject) => {
-        con.query("SELECT venta.id AS venta, venta.fecha , productos.nombre_comercial AS producto, detalle_venta.cantidad_pedida AS cantidad, detalle_venta.precio_unitario, cantidad_pedida*precio_unitario AS precio_total " + 
-        "FROM detalle_venta INNER JOIN venta ON venta.id=detalle_venta.id_venta " +
-        "INNER JOIN productos ON  detalle_venta.id_producto = productos.id " + 
-        "WHERE venta.cliente = " +  mysql.escape(id) +
-        " ORDER BY venta.fecha" , function (err, result, fields) {
-            if (err) throw err;
-            let convertedResult = calculateTotalPrice(result);
-            resolve(convertedResult);
-          });
+        con.query("SELECT venta.id AS venta, venta.fecha , productos.nombre_comercial AS producto, detalle_venta.cantidad_pedida AS cantidad, detalle_venta.precio_unitario, cantidad_pedida*precio_unitario AS precio_total " +
+            "FROM detalle_venta INNER JOIN venta ON venta.id=detalle_venta.id_venta " +
+            "INNER JOIN productos ON  detalle_venta.id_producto = productos.id " +
+            "WHERE venta.cliente = " + mysql.escape(id) +
+            " ORDER BY venta.fecha", function (err, result, fields) {
+                if (err) throw err;
+                let convertedResult = calculateTotalPrice(result);
+                resolve(convertedResult);
+            });
     })
 }
 
-function calculateTotalPrice(array){
+function calculateTotalPrice(array) {
     let totalSumPerSale = 0
-    for(let i = 0; i < array.length; i++ ){
-        if(i != array.length - 1 && array[i].venta == array[i+1].venta){
+    for (let i = 0; i < array.length; i++) {
+        if (i != array.length - 1 && array[i].venta == array[i + 1].venta) {
             totalSumPerSale = totalSumPerSale + array[i].precio_total;
-            array[i].precio_total_venta ="";
+            array[i].precio_total_venta = "";
         }
         else {
             totalSumPerSale = totalSumPerSale + array[i].precio_total
@@ -35,5 +35,34 @@ function calculateTotalPrice(array){
 }
 
 
+function insertSaleInSales(sale) {
+    return new Promise((resolve, reject) => {
+        let today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        con.query("INSERT INTO venta (fecha, cliente) VALUES (\'" + yyyy + '-' + mm + '-' + dd + "'\, \'" + sale.cliente + "'\)", function (err, result, fields) {
+            if (err) throw err;
+            resolve(result);
+        });
+    })
+}
 
-module.exports = {getSaleByClientId}
+function insertSaleInSalesDetails(dataFromSale, id) {
+    let query = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad_pedida, precio_unitario) VALUES ?";
+    let values = dataFromSale.map(data =>{
+        let row = [];
+        row.push(id, data.id, data.cantidad, data.precio);
+        return row;
+    })
+    return new Promise((resolve, reject) => {
+        con.query(query, [values], function (err, result, fields) {
+            console.log(values);
+            if (err) throw err;
+            resolve(result);
+        });
+    })
+}
+
+
+module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails }
