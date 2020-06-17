@@ -39,7 +39,7 @@ function insertSaleInSales(sale) {
     return new Promise((resolve, reject) => {
         let today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth();
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         con.query("INSERT INTO venta (fecha, cliente) VALUES (\'" + yyyy + '-' + mm + '-' + dd + "'\, \'" + sale.cliente + "'\)", function (err, result, fields) {
             if (err) throw err;

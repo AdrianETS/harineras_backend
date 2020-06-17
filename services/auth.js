@@ -24,7 +24,6 @@ function checkToken(token){
     return new Promise((resolve,reject) =>{
         jwt.verify(token, "My_secret", function (err, decoded) {
             if (err || !token) {
-                console.log("error");
                 reject(["Unauthorized", 401]);
             } else {
                 resolve();
