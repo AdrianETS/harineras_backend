@@ -31,5 +31,4 @@ function getProductsBySalesId(id) {
 
 
 
-module.exports = {getAllProducts, getProductById}
-module.exports = {getProductsBySalesId}
+module.exports = {getAllProducts, getProductById, getProductsBySalesId}

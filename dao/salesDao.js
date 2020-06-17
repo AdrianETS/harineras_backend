@@ -77,4 +77,3 @@ function insertSaleInSalesDetails(dataFromSale, id) {
 
 
 module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails }
-module.exports = {getSaleByClientId, listSales}
