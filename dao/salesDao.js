@@ -24,7 +24,7 @@ function listSales() {
             if (err) throw err;
             resolve(result);
           });
-    })
+    });
 }
 
 
