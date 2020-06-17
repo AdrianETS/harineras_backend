@@ -12,6 +12,7 @@ function getSaleByClientId(id) {
             "WHERE venta.cliente = " + mysql.escape(id) +
             " ORDER BY venta.fecha", function (err, result, fields) {
                 if (err) throw err;
+                formatUTCDate(result);
                 let convertedResult = calculateTotalPrice(result);
                 resolve(convertedResult);
             });
@@ -34,12 +35,23 @@ function calculateTotalPrice(array) {
     return array;
 }
 
+function formatUTCDate(sales) {
+    sales.map(sale => {
+        var d = sale.fecha;
+        var currentDate = d.getDate();
+        var currentMonth = d.getMonth() + 1; //Months are zero based
+        var currentYear = d.getFullYear();
+        sale.fecha = currentDate + "-" + currentMonth + "-" + currentYear;
+        return sale;
+    });
+}
+
 
 function insertSaleInSales(sale) {
     return new Promise((resolve, reject) => {
         let today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1;
+        var mm = today.getMonth() + 1;
         var yyyy = today.getFullYear();
         con.query("INSERT INTO venta (fecha, cliente) VALUES (\'" + yyyy + '-' + mm + '-' + dd + "'\, \'" + sale.cliente + "'\)", function (err, result, fields) {
             if (err) throw err;
@@ -50,7 +62,7 @@ function insertSaleInSales(sale) {
 
 function insertSaleInSalesDetails(dataFromSale, id) {
     let query = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad_pedida, precio_unitario) VALUES ?";
-    let values = dataFromSale.map(data =>{
+    let values = dataFromSale.map(data => {
         let row = [];
         row.push(id, data.id, data.cantidad, data.precio);
         return row;
