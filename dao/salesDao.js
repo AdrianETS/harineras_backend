@@ -19,7 +19,18 @@ function getSaleByClientId(id) {
     })
 }
 
-function calculateTotalPrice(array) {
+function listSales() {
+    return new Promise((resolve, reject) => {
+        con.query("SELECT * FROM detalle_venta" , function (err, result, fields) {
+            if (err) throw err;
+            resolve(result);
+          });
+    });
+}
+
+
+
+function calculateTotalPrice(array){
     let totalSumPerSale = 0
     for (let i = 0; i < array.length; i++) {
         if (i != array.length - 1 && array[i].venta == array[i + 1].venta) {
@@ -77,4 +88,4 @@ function insertSaleInSalesDetails(dataFromSale, id) {
 }
 
 
-module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails }
+module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails, listSales }

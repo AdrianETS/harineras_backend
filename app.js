@@ -65,9 +65,27 @@ app.get('/products/:id', cors(), (req, res) => {
     }));
 });
 
+app.get('/products/sales/:id', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => productsDao.getProductsBySalesId(req.params.id))
+    .then(product => res.send(product))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
 app.get('/sales/:id', cors(), (req, res) => {
   auth.checkToken(req.query.token)
     .then(result => salesDao.getSaleByClientId(req.params.id))
+    .then(sales => res.send(sales))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
+app.get('/sales/', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => salesDao.listSales(req.params.id))
     .then(sales => res.send(sales))
     .catch(() => res.status(401).json({
       error: 'Unauthorized'
