@@ -113,6 +113,18 @@ app.post("/sales", cors(), (req, res) => {
     }));
 })
 
+app.get('/clients/risk/:id', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
+    .then(result => clientsDao.getRiskIndexByClient(req.params.id))
+    .then(riskIndex => res.send("" + riskIndex))
+    .catch(err => {
+      console.log(err)
+      res.status(401).json({
+        error: 'Unauthorized'
+      })
+    })
+});
+
 app.post("/login", cors(), (req, res) => {
   auth.login(req, res);
 })
