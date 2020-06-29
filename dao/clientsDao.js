@@ -51,9 +51,9 @@ function getRiskIndexByClient(id) {
 }
 
 function calculateIndex(dbRiskObject) {
-    let iti = 0;
-    let tei = 0;
-    let ii = 100 - dbRiskObject.indice_impago_cyc;
+    let iti = 0; //importe total impagado
+    let tei = 0; //tiempo exceso impago
+    let ii = 100 - dbRiskObject.indice_impago_cyc; //indice impago
     let riskIndex = 0;
 
     if (dbRiskObject.importe_total_impagado <= 10000) {
@@ -66,7 +66,7 @@ function calculateIndex(dbRiskObject) {
     } else {
         tei = 100;
     }
-    riskIndex = 0.4 * iti + 0.4 * tei + 0.2 * ii;
+    riskIndex = Math.round(0.4 * iti + 0.4 * tei + 0.2 * ii);
     return riskIndex;
 }
 
