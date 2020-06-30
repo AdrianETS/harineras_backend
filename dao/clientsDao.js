@@ -44,9 +44,9 @@ function getRiskIndexByClient(id) {
             if (err) throw err;
             if (result[0] != undefined){
                 let riskIndex = calculateIndex(result[0])
-                resolve(riskIndex);
+                resolve("" + riskIndex);
             } else {
-                reject();
+                resolve("No data for this user");
             }
         });
     })
