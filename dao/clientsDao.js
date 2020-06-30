@@ -42,10 +42,12 @@ function getRiskIndexByClient(id) {
     return new Promise((resolve, reject) => {
         con.query("SELECT * FROM riesgos_clientes WHERE id_cliente = " + mysql.escape(id), function (err, result, fields) {
             if (err) throw err;
-            console.log(result[0])
-            let riskIndex = calculateIndex(result[0])
-            console.log(riskIndex);
-            resolve(riskIndex);
+            if (result[0] != undefined){
+                let riskIndex = calculateIndex(result[0])
+                resolve(riskIndex);
+            } else {
+                reject();
+            }
         });
     })
 }
