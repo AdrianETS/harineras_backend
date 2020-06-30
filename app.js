@@ -85,6 +85,15 @@ app.get('/sales/:id', cors(), (req, res) => {
 
 app.get('/sales/', cors(), (req, res) => {
   auth.checkToken(req.query.token)
+    .then(result => salesDao.getAllSales())
+    .then(sales => res.send(sales))
+    .catch(() => res.status(401).json({
+      error: 'Unauthorized'
+    }));
+});
+
+app.get('/sales/', cors(), (req, res) => {
+  auth.checkToken(req.query.token)
     .then(result => salesDao.listSales(req.params.id))
     .then(sales => res.send(sales))
     .catch(() => res.status(401).json({
