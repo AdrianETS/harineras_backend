@@ -19,6 +19,19 @@ function getSaleByClientId(id) {
     })
 }
 
+function getAllSales() {
+    return new Promise((resolve, reject) => {
+        con.query("SELECT venta.id AS venta, venta.fecha , productos.nombre_comercial AS producto, detalle_venta.cantidad_pedida AS cantidad, detalle_venta.precio_unitario, cantidad_pedida*precio_unitario AS precio_total " +
+            "FROM detalle_venta INNER JOIN venta ON venta.id=detalle_venta.id_venta " +
+            "INNER JOIN productos ON  detalle_venta.id_producto = productos.id " +
+            " ORDER BY venta.fecha", function (err, result, fields) {
+                if (err) throw err;
+                formatUTCDate(result);
+                resolve(result);
+            });
+    })
+}
+
 function listSales() {
     return new Promise((resolve, reject) => {
         con.query("SELECT * FROM detalle_venta" , function (err, result, fields) {
@@ -88,4 +101,4 @@ function insertSaleInSalesDetails(dataFromSale, id) {
 }
 
 
-module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails, listSales }
+module.exports = { getSaleByClientId, insertSaleInSales, insertSaleInSalesDetails, listSales, getAllSales }
